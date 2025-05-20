@@ -1,0 +1,27 @@
+# Node modules (never push this)
+node_modules/
+
+# Environment variables (keep secrets out of Git)
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# VS Code settings (optional)
+.vscode/
+
+# Build folders (if you transpile or use dist/)
+dist/
+build/
+
+# Optional: uploads or temp files
+uploads/
+temp/
