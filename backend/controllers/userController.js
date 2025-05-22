@@ -74,7 +74,7 @@ const loginUser = async (req, res) => {
     // Generate token
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
 
-    res.status(200).json({
+    res.cookie("token", token).status(200).json({
       message: "User logged in successfully",
       token,
     });
@@ -84,4 +84,16 @@ const loginUser = async (req, res) => {
   }
 };
 
-export default { createUser, loginUser };
+const getProfile = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  res.status(200).json({
+    _id: req.user._id,
+    fullname: req.user.fullname,
+    email: req.user.email,
+  });
+};
+
+export default { createUser, loginUser, getProfile };

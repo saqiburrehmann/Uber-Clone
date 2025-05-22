@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "../controllers/userController.js";
 import { body } from "express-validator";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -30,5 +31,8 @@ router.post(
   ],
   userController.loginUser
 );
+
+// getting progile with middleware
+router.get("/profile", authMiddleware.auth, userController.getProfile);
 
 export default router;
