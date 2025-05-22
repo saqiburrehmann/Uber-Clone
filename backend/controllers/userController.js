@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import BlackList from "../models/blackListTokenModel.js";
 
 const createUser = async (req, res) => {
   const errors = validationResult(req);
@@ -36,7 +37,9 @@ const createUser = async (req, res) => {
     });
 
     // 🪙 Generate JWT token
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
     res.status(201).json({
       message: "User registered successfully",
@@ -72,7 +75,9 @@ const loginUser = async (req, res) => {
     }
 
     // Generate token
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
     res.cookie("token", token).status(200).json({
       message: "User logged in successfully",
@@ -96,4 +101,16 @@ const getProfile = async (req, res) => {
   });
 };
 
-export default { createUser, loginUser, getProfile };
+const logoutProfile = async (req, res) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(400).json({ message: "NO token found" });
+  }
+  
+  await BlackList.create({ token });
+  res.clearCookie("token");
+
+  res.status(200).json({ message: "logged out" });
+};
+
+export default { createUser, loginUser, getProfile, logoutProfile };

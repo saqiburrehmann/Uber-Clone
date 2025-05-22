@@ -32,7 +32,10 @@ router.post(
   userController.loginUser
 );
 
-// getting progile with middleware
+// getting pofile with middleware
 router.get("/profile", authMiddleware.auth, userController.getProfile);
+
+// logou user
+router.delete("/logout", authMiddleware.auth, userController.logoutProfile);
 
 export default router;

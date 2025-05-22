@@ -1,10 +1,19 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import BlackList from "../models/blackListTokenModel.js";
 
 const auth = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "unauthorized" });
+  }
+
+  const blackListed = await BlackList.findOne({ token });
+
+  if (blackListed) {
+    return res
+      .status(401)
+      .json({ message: "unauthorized - token blacklisted" });
   }
 
   try {
