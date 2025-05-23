@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import Captain from "../models/captainModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import BlackList from "../models/blackListTokenModel.js";
 
 const createCaptain = async (req, res) => {
   const errors = validationResult(req);
@@ -99,4 +100,21 @@ const getCaptainProfile = async (req, res) => {
   });
 };
 
-export default { createCaptain, loginCaptain, getCaptainProfile };
+const logoutProfile = async (req, res) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(400).json({ message: "NO token found" });
+  }
+
+  await BlackList.create({ token });
+  res.clearCookie("token");
+
+  res.status(200).json({ message: "logged out" });
+};
+
+export default {
+  createCaptain,
+  loginCaptain,
+  getCaptainProfile,
+  logoutProfile,
+};

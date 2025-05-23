@@ -78,5 +78,8 @@ router.post(
 // Captain Profile get with token or cookie
 router.get("/", authMiddleware.captainAuth, captainController.getCaptainProfile);
 
+// Captain Logout 
+router.delete("/logout", authMiddleware.captainAuth, captainController.logoutProfile)
+
 
 export default router;
