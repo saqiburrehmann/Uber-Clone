@@ -87,4 +87,16 @@ const loginCaptain = async (req, res) => {
   }
 };
 
-export default { createCaptain, loginCaptain };
+const getCaptainProfile = async (req, res) => {
+  if (!req.captain) {
+    return res.status(401).json({ message: "Unauthorized captain" });
+  }
+
+  res.status(200).json({
+    _id: req.captain._id,
+    fullname: req.captain.fullname,
+    email: req.captain.email,
+  });
+};
+
+export default { createCaptain, loginCaptain, getCaptainProfile };

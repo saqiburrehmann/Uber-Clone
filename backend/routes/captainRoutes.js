@@ -1,6 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 import captainController from "../controllers/captainController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -73,5 +74,9 @@ router.post(
   ],
   captainController.loginCaptain
 );
+
+// Captain Profile get with token or cookie
+router.get("/", authMiddleware.captainAuth, captainController.getCaptainProfile);
+
 
 export default router;
