@@ -44,6 +44,7 @@ const createUser = async (req, res) => {
     res.status(201).json({
       message: "User registered successfully",
       token,
+      user,
     });
   } catch (err) {
     console.error("Registration Error: ", err.message);
@@ -106,7 +107,7 @@ const logoutProfile = async (req, res) => {
   if (!token) {
     return res.status(400).json({ message: "NO token found" });
   }
-  
+
   await BlackList.create({ token });
   res.clearCookie("token");
 
