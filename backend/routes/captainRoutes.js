@@ -4,6 +4,7 @@ import captainController from "../controllers/captainController.js";
 
 const router = express.Router();
 
+//  Captain Register
 router.post(
   "/register",
   [
@@ -59,6 +60,18 @@ router.post(
       .withMessage("Color must be at least 3 characters"),
   ],
   captainController.createCaptain
+);
+
+// Captain Login
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Invalid Email or Password"),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be 6 chracters long"),
+  ],
+  captainController.loginCaptain
 );
 
 export default router;
