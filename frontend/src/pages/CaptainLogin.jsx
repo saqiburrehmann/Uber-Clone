@@ -53,7 +53,7 @@ const CaptainLogin = () => {
             type="submit"
             className="w-full bg-black text-white py-2 rounded hover:opacity-90 mb-4"
           >
-            Login With Captain
+            Login
           </button>
 
           <Link
