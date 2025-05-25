@@ -25,6 +25,7 @@ const UserLogin = () => {
           <div className="flex justify-center mb-6">
             <img className="w-16" src={uberImg} alt="Uber logo" />
           </div>
+          <h1 className="text-2xl text-center my-3 font-semibold">User Login</h1>
 
           <h3 className="text-xl font-semibold mb-2">What's your email?</h3>
           <input
@@ -33,7 +34,7 @@ const UserLogin = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="email@example.com"
+            placeholder="user@example.com"
           />
 
           <h3 className="text-lg font-semibold mb-2">Enter Password</h3>
@@ -55,7 +56,7 @@ const UserLogin = () => {
 
           <Link
             to="/captain-login"
-            className="block w-full border bg-yellow-300 border-gray-400 text-gray-700 py-2 rounded hover:bg-gray-100 text-center"
+            className="block w-full border bg-orange-300 border-gray-400 text-gray-700 py-2 rounded text-center"
           >
             Login with Captain
           </Link>
@@ -64,7 +65,7 @@ const UserLogin = () => {
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
               <Link to="/user-signup" className="text-blue-600 hover:underline">
-                Create account
+                Register as a user
               </Link>
             </p>
           </div>
