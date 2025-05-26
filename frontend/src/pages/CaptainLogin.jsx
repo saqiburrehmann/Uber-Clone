@@ -1,22 +1,34 @@
 import { useState } from "react";
 import uberImg from "../assets/uber-logo.png";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLoginCaptainMutation } from "../features/api/authApi";
+import { toast } from "react-toastify";
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captainData, setCaptainData] = useState("");
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const [loginCaptain, { isLoading, error }] = useLoginCaptainMutation();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     const newData = {
       email: email,
       password: password,
     };
-    setCaptainData(newData);
-    console.log("Submitted Data:", newData);
-    setEmail("");
-    setPassword("");
+
+    try {
+      const res = await loginCaptain(newData).unwrap();
+      toast.success("Captain Login");
+      navigate("/home");
+      setEmail("");
+      setPassword("");
+    } catch (err) {
+      toast.error(err?.data?.message || "Captain login failed!");
+      console.log(err);
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

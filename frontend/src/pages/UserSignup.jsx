@@ -28,7 +28,7 @@ const UserSignup = () => {
     try {
       const res = await registerUser(newData).unwrap();
       toast.success("User Registered Successfully!");
-      navigate("/home");
+      navigate("/user-signup");
     } catch (err) {
       toast.error(err?.data?.message || "Signup failed!");
     }

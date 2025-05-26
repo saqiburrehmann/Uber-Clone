@@ -24,7 +24,32 @@ export const authApi = createApi({
         },
       }),
     }),
+    registerCaptain: builder.mutation({
+      query: (captainData) => ({
+        url: "/captain/register",
+        method: "POST",
+        body: captainData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    loginCaptain: builder.mutation({
+      query: (captainData) => ({
+        url: "/captain/login",
+        method: "POST",
+        body: captainData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation } = authApi;
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useRegisterCaptainMutation,
+  useLoginCaptainMutation,
+} = authApi;
