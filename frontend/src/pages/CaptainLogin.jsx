@@ -21,6 +21,7 @@ const CaptainLogin = () => {
 
     try {
       const res = await loginCaptain(newData).unwrap();
+      localStorage.setItem("token", res.token);
       toast.success("Captain Login");
       navigate("/home");
       setEmail("");

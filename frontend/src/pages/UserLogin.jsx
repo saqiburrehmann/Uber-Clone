@@ -4,8 +4,12 @@ import uberImg from "../assets/uber-logo.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/auth/authSliceToken";
 
 const UserLogin = () => {
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,10 +22,14 @@ const UserLogin = () => {
 
     try {
       const res = await loginUser(newData).unwrap();
+      localStorage.setItem("token", res.token);
+
+      dispatch(setCredentials({ token: res.token }));
+
       toast.success("User Login");
       navigate("/home");
     } catch (err) {
-      toast.error(err?.data?.message || "Signup failed!");
+      toast.error(err?.data?.message || "login failed!");
     }
 
     setEmail("");
