@@ -1,35 +1,44 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from "../features/api/authApi.js";
 import uberImg from "../assets/uber-logo.png";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UserSignup = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [userDate, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const [registerUser, { isLoading, error }] = useRegisterUserMutation();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     const newData = {
       fullname: {
-        firstname: firstname,
-        lastname: lastname,
+        firstname,
+        lastname,
       },
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
+      email,
+      password,
     };
-    setUserData(newData);
-    console.log(newData);
+
+    try {
+      const res = await registerUser(newData).unwrap();
+      toast.success("User Registered Successfully!");
+      navigate("/home");
+    } catch (err) {
+      toast.error(err?.data?.message || "Signup failed!");
+    }
 
     setFirstname("");
     setLastname("");
     setEmail("");
     setPassword("");
-    setConfirmPassword("");
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -69,7 +78,7 @@ const UserSignup = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="captain@example.com"
+            placeholder="user@example.com"
           />
 
           <h3 className="text-lg font-semibold mb-2">Enter Password</h3>
@@ -78,16 +87,6 @@ const UserSignup = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="password"
-          />
-
-          <h3 className="text-lg font-semibold mb-2">Confirm Password</h3>
-          <input
-            className="bg-gray-100 mb-6 border border-gray-300 rounded px-4 py-2 w-full text-base placeholder:text-gray-500"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
             required
             placeholder="password"
           />
