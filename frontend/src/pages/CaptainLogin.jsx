@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLoginCaptainMutation } from "../features/api/authApi";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/auth/authSliceToken.js";
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loginCaptain, { isLoading, error }] = useLoginCaptainMutation();
 
   const submitHandler = async (e) => {
@@ -22,8 +25,10 @@ const CaptainLogin = () => {
     try {
       const res = await loginCaptain(newData).unwrap();
       localStorage.setItem("token", res.token);
+      dispatch(setCredentials({ token: res.token, role: "captain" }));
+
       toast.success("Captain Login");
-      navigate("/home");
+      navigate("/captain-home");
       setEmail("");
       setPassword("");
     } catch (err) {

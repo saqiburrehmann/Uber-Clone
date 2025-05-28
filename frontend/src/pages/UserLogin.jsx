@@ -24,10 +24,10 @@ const UserLogin = () => {
       const res = await loginUser(newData).unwrap();
       localStorage.setItem("token", res.token);
 
-      dispatch(setCredentials({ token: res.token }));
+      dispatch(setCredentials({ token: res.token, role: "user" }));
 
       toast.success("User Login");
-      navigate("/home");
+      navigate("/user-home");
     } catch (err) {
       toast.error(err?.data?.message || "login failed!");
     }

@@ -7,6 +7,8 @@ import StartScreen from "./pages/StartScreen";
 import HomeScreen from "./pages/HomeScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
+import CaptainHomeScreen from "./pages/CaptainHomeScreen";
+import CaptainProtectedRoute from "./components/CaptainProtectedRoute";
 
 const App = () => {
   const { token } = useSelector((state) => state.auth);
@@ -15,7 +17,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<StartScreen />} />
         <Route
-          path="/home"
+          path="/user-home"
           element={
             <ProtectedRoute
               isAuthenticated={!!token}
@@ -23,6 +25,17 @@ const App = () => {
             >
               <HomeScreen />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/captain-home"
+          element={
+            <CaptainProtectedRoute
+              isAuthenticated={!!token}
+              redirectPath="/captain-login"
+            >
+              <CaptainHomeScreen />
+            </CaptainProtectedRoute>
           }
         />
 
