@@ -1,3 +1,4 @@
+// All imports
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSliceToken";
@@ -10,14 +11,21 @@ import ubermap from "../assets/uber-map.jpg";
 import LocationSearchPanel from "../components/LocationSearchPannel";
 import { MdElectricRickshaw } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
+import ConfirmRide from "../components/ConfirmRide";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const formRef = useRef(null);
   const vehiclePanelRef = useRef(null);
+  const confirmRidePannelRef = useRef(null);
+
   const [formOpen, setFormOpen] = useState(false);
   const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [confirmRidePanel, setConfirmRidePanel] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [pickup, setPickup] = useState("");
+  const [destination, setDestination] = useState("");
 
   const handleLogout = () => {
     dispatch(logout());
@@ -33,46 +41,39 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (!formRef.current) return;
-
-    if (formOpen) {
-      gsap.to(formRef.current, {
-        y: 0,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    } else {
-      gsap.to(formRef.current, {
-        y: "50%",
-        duration: 0.5,
-        ease: "power3.inOut",
-      });
+    if (formOpen && formRef.current) {
+      gsap.to(formRef.current, { y: 0, duration: 0.5 });
+    } else if (formRef.current) {
+      gsap.to(formRef.current, { y: "50%", duration: 0.5 });
     }
   }, [formOpen]);
 
   useEffect(() => {
-    if (formRef.current) {
-      gsap.set(formRef.current, { y: "50%" });
-    }
+    gsap.set(formRef.current, { y: "50%" });
   }, []);
 
   useEffect(() => {
-    if (!vehiclePanelRef.current) return;
-
-    if (vehiclePanel) {
-      gsap.to(vehiclePanelRef.current, {
-        y: 0,
-        duration: 0.4,
-        ease: "power3.out",
-      });
-    } else {
-      gsap.to(vehiclePanelRef.current, {
-        y: "100%",
-        duration: 0.4,
-        ease: "power3.inOut",
-      });
+    if (vehiclePanel && vehiclePanelRef.current) {
+      gsap.to(vehiclePanelRef.current, { y: 0, duration: 0.4 });
+    } else if (vehiclePanelRef.current) {
+      gsap.to(vehiclePanelRef.current, { y: "100%", duration: 0.4 });
     }
   }, [vehiclePanel]);
+
+  useEffect(() => {
+    if (confirmRidePanel && confirmRidePannelRef.current) {
+      gsap.to(confirmRidePannelRef.current, { y: 0, duration: 0.4 });
+    } else if (confirmRidePannelRef.current) {
+      gsap.to(confirmRidePannelRef.current, { y: "100%", duration: 0.4 });
+    }
+  }, [confirmRidePanel]);
+
+  const handleVehicleSelect = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setVehiclePanel(false);
+    setFormOpen(false); 
+    setConfirmRidePanel(true);
+  };
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -110,12 +111,14 @@ const HomeScreen = () => {
             type="text"
             placeholder="Add a pick-up location"
             onFocus={openForm}
+            onChange={(e) => setPickup(e.target.value)}
           />
           <input
             className="bg-[#eee] px-8 py-2 text-lg rounded-lg w-full mt-3"
             type="text"
             placeholder="Enter your destination"
             onFocus={openForm}
+            onChange={(e) => setDestination(e.target.value)}
           />
         </form>
 
@@ -139,7 +142,7 @@ const HomeScreen = () => {
         )}
       </div>
 
-      {/* Vehicle Option Panel */}
+      {/* Vehicle Panel */}
       <div
         ref={vehiclePanelRef}
         className="fixed bottom-0 w-full bg-white z-30 p-4 rounded-t-2xl shadow-lg translate-y-full"
@@ -159,8 +162,12 @@ const HomeScreen = () => {
         <h3 className="text-lg font-semibold mb-3">Choose a vehicle</h3>
 
         <div className="flex flex-col gap-3 max-h-60 overflow-y-auto">
-          {/* UberGo */}
-          <div className="flex bg-red-400 items-center justify-between p-4 rounded-lg">
+          <div
+            className="flex bg-red-400 items-center justify-between p-4 rounded-lg cursor-pointer"
+            onClick={() =>
+              handleVehicleSelect({ name: "UberGo", price: "10.21" })
+            }
+          >
             <img className="h-10" src={yellowcar} alt="UberGo" />
             <div className="w-1/2">
               <h4 className="font-medium text-sm flex items-center gap-1">
@@ -172,8 +179,10 @@ const HomeScreen = () => {
             <h2 className="text-2xl font-semibold">$10.21</h2>
           </div>
 
-          {/* Auto */}
-          <div className="flex bg-yellow-300 items-center justify-between p-4 rounded-lg">
+          <div
+            className="flex bg-yellow-300 items-center justify-between p-4 rounded-lg cursor-pointer"
+            onClick={() => handleVehicleSelect({ name: "Auto", price: "5.99" })}
+          >
             <MdElectricRickshaw className="text-3xl text-black" />
             <div className="w-1/2">
               <h4 className="font-medium text-sm flex items-center gap-1">
@@ -187,8 +196,10 @@ const HomeScreen = () => {
             <h2 className="text-2xl font-semibold">$5.99</h2>
           </div>
 
-          {/* Bike */}
-          <div className="flex bg-green-300 items-center justify-between p-4 rounded-lg">
+          <div
+            className="flex bg-green-300 items-center justify-between p-4 rounded-lg cursor-pointer"
+            onClick={() => handleVehicleSelect({ name: "Bike", price: "3.49" })}
+          >
             <RiMotorbikeFill className="text-3xl text-black" />
             <div className="w-1/2">
               <h4 className="font-medium text-sm flex items-center gap-1">
@@ -200,6 +211,29 @@ const HomeScreen = () => {
             <h2 className="text-2xl font-semibold">$3.49</h2>
           </div>
         </div>
+      </div>
+
+      {/* Confirm Ride Panel */}
+      <div
+        ref={confirmRidePannelRef}
+        className="fixed w-full z-40 bottom-0 translate-y-full bg-white px-3 py-10 pt-14 rounded-t-2xl shadow-xl"
+      >
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={() => {
+              setConfirmRidePanel(false);
+              setFormOpen(true); // Go back to form
+            }}
+            className="text-2xl"
+          >
+            <IoMdClose />
+          </button>
+        </div>
+        <ConfirmRide
+          vehicle={selectedVehicle}
+          pickup={pickup}
+          destination={destination}
+        />
       </div>
     </div>
   );
